@@ -96,7 +96,7 @@ def _get_goemotion_classes(args):
         'surprise': 26, #ekman
         'neutral': 27
     }
-    all = list(label_dict.values()) 
+    all = list(label_dict.values())
     all.remove(27) # 27 tags (remove the neutral one)
     # train_classes = all
     # val_classes =all
@@ -111,9 +111,9 @@ def _get_dailydialog_utterances_classes(args):
     '''
         @return list of classes associated with each split
     '''
-    label_dict = { 
-        'no emotion': 0, 
-        'anger': 1, 
+    label_dict = {
+        'no emotion': 0,
+        'anger': 1,
         'disgust': 2,
         'fear': 3,
         'happiness': 4,
@@ -135,9 +135,9 @@ def _get_dailydialog_utterances_ekman(args, strategy='emotweet28'):
             strategy (list): ['emotweet28', 'goemotions']
         @return list of classes associated with each split
     '''
-    label_dict = { 
+    label_dict = {
         'no emotion': 0, # not targeted
-        'anger': 1, 
+        'anger': 1,
         'disgust': 2, # no equivalent
         'fear': 3,
         'happiness': 4,
@@ -158,9 +158,9 @@ def _get_dailydialog_utterances_meta_classes(args):
         dedicated to the meta version
         @return list of classes associated with each split
     '''
-    label_dict = { 
-        'no emotion': 0, 
-        'anger': 1, 
+    label_dict = {
+        'no emotion': 0,
+        'anger': 1,
         'disgust': 2,
         'fear': 3,
         'happiness': 4,
@@ -487,7 +487,7 @@ def load_dataset(args):
         train_classes, val_classes, test_classes = _get_dailydialog_utterances_meta_classes(args)
     elif args.dataset == 'dailydialog_u_ekman':
         train_classes, val_classes, test_classes = _get_dailydialog_utterances_ekman(args, strategy=args.finetuned_dataset)
-    elif args.dataset in ['goemotions', 'dailydialog_u_test_from_goemotions']: 
+    elif args.dataset in ['goemotions', 'dailydialog_u_test_from_goemotions']:
         train_classes, val_classes, test_classes = _get_goemotion_classes(args)
     elif args.dataset == 'goemotions_meta':
         train_classes, val_classes, test_classes = _get_goemotion_meta_classes(args)
@@ -510,7 +510,7 @@ def load_dataset(args):
         train_classes = test_classes
         val_classes = test_classes
         args.n_train_class, args.n_val_class = args.n_test_class, args.n_test_class
-        
+
 
     tprint('Loading data')
     all_data = _load_json(args.data_path)
