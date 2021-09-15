@@ -275,7 +275,7 @@ def parse_args():
                              "Options: [bert-base-uncased, (other models on huggingface), ...]"
                              "[Default: bert-base-uncased]")
     parser.add_argument("--nosave", action="store_true", default=False, help="do not save the model")
-    parser.add_argument("--cuda", type=int, default=-1, help="cuda device, -1 for cpu")
+    parser.add_argument("--cuda", type=int, default=0, help="cuda device, -1 for cpu")
 
     return parser.parse_args()
 
