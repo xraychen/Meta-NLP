@@ -3,6 +3,7 @@ import datetime
 import torch
 import torch.nn as nn
 from transformers import BertModel
+from transformers import AutoModel
 
 
 class CXTEBD(nn.Module):
@@ -27,7 +28,8 @@ class CXTEBD(nn.Module):
         print("{}, Loading pretrained bert...".format(
             datetime.datetime.now().strftime('%02y/%02m/%02d %H:%M:%S')), flush=True)
 
-        self.model = BertModel.from_pretrained(pretrained_model_name_or_path, cache_dir=cache_dir)
+        # self.model = BertModel.from_pretrained(pretrained_model_name_or_path, cache_dir=cache_dir)
+        self.model = AutoModel.from_pretrained(pretrained_model_name_or_path, cache_dir=cache_dir)
 
         print("{}, Bert loaded".format(
             datetime.datetime.now().strftime('%02y/%02m/%02d %H:%M:%S')), flush=True)

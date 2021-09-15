@@ -43,16 +43,14 @@ CODE_ARGS = Munch({
     'mode':'train', # train test finetune finetune2 supervised
 
     # load bert embeddings for sent-level datasets (optional)
-    # 'bert':False,
-    'bert':True,
+    'bert':False,
     'n_workers': 0,
     'bert_cache_dir': '~/.cache/torch/transformers/', # adjust to your config (this is the default dir on linux)
     'pretrained_bert': 'bert-base-uncased',
 
     # model options
     'auxiliary':[],
-    # 'embedding':'transfo', # [avg, meta, cnn, transfo] 'ebd' and bert true to use bert embeddings directly
-    'embedding':'ebd', # [avg, meta, cnn, transfo] 'ebd' and bert true to use bert embeddings directly
+    'embedding':'transfo', # [avg, meta, cnn, transfo] 'ebd' and bert true to use bert embeddings directly
     'classifier': 'proto', # [proto, mlp, r2d2]
 
     # distributional signature options (to apply Bao et al. 2020)
@@ -270,8 +268,12 @@ def parse_args():
                               "[Default: train_test]")
     parser.add_argument("--encoder", type=str, default="transfo",
                         help="Encoder when applied. 'avg' is the faster, 'transfo' yields best results "
-                              "Options: [transfo, cnn, avg]"
+                              "Options: [transfo, cnn, avg, bert]"
                               "[Default: transfo]")
+    parser.add_argument("--pretrained_bert", type=str, default="bert-base-uncased",
+                        help="Model type, only used when args.encoder is set to 'bert' "
+                             "Options: [bert-base-uncased, (other models on huggingface), ...]"
+                             "[Default: bert-base-uncased]")
     parser.add_argument("--nosave", action="store_true", default=False, help="do not save the model")
     parser.add_argument("--cuda", type=int, default=-1, help="cuda device, -1 for cpu")
 
@@ -457,7 +459,7 @@ def runSupervisedGoemotionsOnDailydialog(mode='highlevel'):
 
     CODE_ARGS['lr'] = 1e-4
 
-    CODE_ARGS['embedding'] = 'transfo'
+    # CODE_ARGS['embedding'] = 'transfo'
     CODE_ARGS['way'] = 6
     CODE_ARGS['shot'] = 2
     CODE_ARGS['query'] = 2
@@ -485,7 +487,7 @@ def runSupervisedDailydialog(encoder='transfo'):
     runname = 'dailydialog_tmp'
 
     CODE_ARGS['lr'] = 1e-4
-    CODE_ARGS['embedding'] = encoder
+    # CODE_ARGS['embedding'] = encoder
     CODE_ARGS['way'] = 6
     CODE_ARGS['shot'] = 2
     CODE_ARGS['query'] = 2
@@ -595,6 +597,15 @@ if __name__ == "__main__":
 
         CODE_ARGS['save'] = not args.nosave
         CODE_ARGS['cuda'] = args.cuda
+
+        if args.encoder == 'bert':
+            CODE_ARGS['bert'] = True
+            CODE_ARGS['transfo_emsize'] = 768
+            CODE_ARGS['transfo_nhid'] = 768
+            CODE_ARGS['embedding'] = 'ebd'
+            CODE_ARGS['pretrained_bert'] = args.pretrained_bert
+        else:
+            CODE_ARGS['embedding'] = args.encoder
 
         trainModel = 'train' in args.pipeline
         finetuneModel = 'finetune' in args.pipeline

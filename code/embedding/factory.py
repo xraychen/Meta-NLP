@@ -33,6 +33,8 @@ def get_embedding(vocab, args):
         model = META(ebd, args)
     elif args.embedding == 'ebd' and args.bert:
         model = ebd  # using bert representation directly
+    else:
+        raise NotImplementedError(f'Unknown embedding: {args.embedding}')
 
     print("{}, Building embedding".format(datetime.datetime.now().strftime('%02y/%02m/%02d %H:%M:%S')), flush=True)
 
